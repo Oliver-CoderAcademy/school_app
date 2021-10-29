@@ -1,24 +1,8 @@
-import os
-from flask import Flask, jsonify, request, abort
+from flask import jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from my_app import app
 
-(
-    db_user, 
-    db_pass, 
-    db_name, 
-    db_domain
-) = (os.environ.get(item) for item in [
-    "DB_USER", 
-    "DB_PASS", 
-    "DB_NAME", 
-    "DB_DOMAIN"
-    ]
-)
-
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://{db_user}:{db_pass}@{db_domain}/{db_name}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+print(app)
 
 db = SQLAlchemy(app)
 
@@ -53,10 +37,8 @@ def create_course():
 
 @app.route("/courses/<int:id>/", methods = ["GET"])
 def get_course(id):
-    course = Course.query.get(id)
-    if course:
-        return jsonify(course.serialize)
-    return jsonify(None)
+    course = Course.query.get_or_404(id)
+    return jsonify(course.serialize)
 
 @app.route("/courses/<int:id>/", methods=["PUT", "PATCH"])
 def update_course(id):
@@ -67,10 +49,8 @@ def update_course(id):
 
 @app.route("/courses/<int:id>/", methods = ["DELETE"])
 def delete_course(id):
-    course = Course.query.get(id)
-    if course:
-        db.session.delete(course)
-        db.session.commit()
-        return jsonify(course.serialize)
-    abort(404)
-    
+    course = Course.query.get_or_404(id)
+    db.session.delete(course)
+    db.session.commit()
+    return jsonify(course.serialize)
+
