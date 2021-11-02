@@ -23,7 +23,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db = SQLAlchemy(app)
 db.create_all()
 
-from school_app.controllers import courses
+from school_app.course_controllers import courses
 app.register_blueprint(courses)
 
 
