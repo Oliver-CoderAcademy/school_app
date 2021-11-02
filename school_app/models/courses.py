@@ -1,4 +1,4 @@
-from school_app import db
+from main import db
 
 class Course(db.Model):
     __tablename__ = "courses"
