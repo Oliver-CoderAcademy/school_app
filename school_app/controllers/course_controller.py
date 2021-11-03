@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from main import db
 from models.courses import Course
 from schemas.course_schema import courses_schema, course_schema
+from marshmallow.exceptions import ValidationError
 
 courses = Blueprint('courses', __name__)
 
@@ -37,3 +38,4 @@ def delete_course(id):
     db.session.delete(course)
     db.session.commit()
     return jsonify(course_schema.dump(course))
+
